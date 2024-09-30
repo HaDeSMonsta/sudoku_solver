@@ -90,8 +90,13 @@ impl Sudoku {
         true
     }
 
-    pub fn solved(&self) -> bool {
-        todo!()
+    pub fn is_solved(&self) -> bool {
+        for row in &self.rows {
+            for cell in row {
+                if cell.is_none() { return false; }
+            }
+        }
+        self.is_valid()
     }
 }
 
