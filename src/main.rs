@@ -1,11 +1,13 @@
 mod generate;
+mod sudoku;
 
 use clap::Parser;
 use std::path::PathBuf;
 
 use generate::*;
+use crate::sudoku::Sudoku;
 
-pub type Sudoku = Vec<Vec<Option<u8>>>;
+pub type SudokuT = Vec<Vec<Option<u8>>>;
 
 /// Sudoku solver
 #[derive(Parser)]
@@ -26,25 +28,8 @@ fn main() {
 	};
 
 	let sudoku = sudoku.expect("Unable to read input");
-	print_sudoku(&sudoku);
+	let sudoku = Sudoku::from(sudoku);
+	sudoku.print();
 }
 
-fn print_sudoku(sudoku: &Sudoku) {
-	for sudoku_idx in 0..sudoku.len() {
-		let row = sudoku.get(sudoku_idx).unwrap();
-
-		for row_idx in 0..row.len() {
-			let value = row.get(row_idx).unwrap().unwrap_or(0);
-			if value == 0 { print!("-"); } else { print!("{value}"); }
-
-			if row_idx == row.len() - 1 { break; }
-			if (row_idx + 1) % 3 == 0 { print!(" ┃ "); }
-			else { print!(" | "); }
-		}
-
-		if sudoku_idx == sudoku.len() - 1 { break; }
-		println!();
-		if (sudoku_idx + 1) % 3 == 0 { println!("{}", "-".repeat(34)); }
-	}
-}
 

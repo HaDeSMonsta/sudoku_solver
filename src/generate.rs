@@ -4,9 +4,9 @@ use std::io;
 use std::io::{BufReader, BufRead};
 use std::path::PathBuf;
 use regex::Regex;
-use crate::Sudoku;
+use crate::SudokuT;
 
-pub fn read_sudoku_cmd() -> io::Result<Sudoku> {
+pub fn read_sudoku_cmd() -> io::Result<SudokuT> {
 	let mut sudoku = Vec::new();
 	println!("Please input the sudoku now line by line, allowed characters: \
 	[1-9-], separate by space");
@@ -20,7 +20,7 @@ pub fn read_sudoku_cmd() -> io::Result<Sudoku> {
 	Ok(sudoku)
 }
 
-pub fn read_sudoku_file(path: PathBuf) -> io::Result<Sudoku> {
+pub fn read_sudoku_file(path: PathBuf) -> io::Result<SudokuT> {
 	println!("Reading sudoku from file {path:?}");
 
 	let file = OpenOptions::new()
