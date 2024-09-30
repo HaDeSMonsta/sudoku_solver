@@ -19,8 +19,8 @@ impl Sudoku {
                 if (row_idx + 1) % 3 == 0 { print!(" ┃ "); } else { print!(" | "); }
             }
 
-            if sudoku_idx == sudoku.len() - 1 { break; }
             println!();
+            if sudoku_idx == sudoku.len() - 1 { break; }
             if (sudoku_idx + 1) % 3 == 0 { println!("{}", "-".repeat(34)); }
         }
     }
@@ -29,12 +29,22 @@ impl Sudoku {
         todo!()
     }
 
-    pub fn valid(&self) -> bool {
-        todo!()
+    pub fn is_valid(&self) -> bool {
+        // rc = row/column
+        for rc in 0..9 {
+            if !self.is_valid_row(rc) || !self.is_valid_column(rc) { return false; }
+        }
+        for row in 0..3 {
+            for column in 0..3 {
+                if !self.is_valid_box(row * 3, column * 3) { return false; }
+            }
+        }
+
+        true
     }
 
-    fn validate_row(&self, row: u8) -> bool {
-        let row = self.rows.get(row as usize).unwrap();
+    fn is_valid_row(&self, row: usize) -> bool {
+        let row = self.rows.get(row).unwrap();
         let mut seen = HashSet::new();
 
         for cell in row {
@@ -46,13 +56,13 @@ impl Sudoku {
         true
     }
 
-    fn validate_column(&self, column: u8) -> bool {
+    fn is_valid_column(&self, column: usize) -> bool {
         let mut seen = HashSet::new();
-        for row in 0usize..9usize {
+        for row in 0..9 {
             if let Some(num) = self.rows
                                    .get(row)
                                    .unwrap()
-                                   .get(column as usize)
+                                   .get(column)
                                    .unwrap() {
                 if !seen.insert(*num) { return false; }
             }
@@ -62,8 +72,22 @@ impl Sudoku {
     }
 
     /// Pass in the top left corner of the 3x3 box
-    fn validate_box(&self, row: u8, column: u8) -> bool {
-        todo!()
+    fn is_valid_box(&self, row: usize, column: usize) -> bool {
+        let mut seen = HashSet::new();
+
+        for row in row..(row + 3) {
+            for column in column..(column + 3) {
+                if let Some(num) = self.rows
+                                       .get(row)
+                                       .unwrap()
+                                       .get(column)
+                                       .unwrap() {
+                    if !seen.insert(*num) { return false; }
+                }
+            }
+        }
+
+        true
     }
 
     pub fn solved(&self) -> bool {
