@@ -1,30 +1,15 @@
-use std::collections::HashSet;
 use crate::SudokuT;
+use std::collections::HashSet;
+use std::fs::OpenOptions;
+use std::io;
+use std::io::{BufWriter, Write};
 
+#[derive(Clone)]
 pub struct Sudoku {
     rows: SudokuT,
 }
 
 impl Sudoku {
-    pub fn print(&self) {
-        let sudoku = &self.rows;
-        for sudoku_idx in 0..sudoku.len() {
-            let row = sudoku.get(sudoku_idx).unwrap();
-
-            for row_idx in 0..row.len() {
-                let value = row.get(row_idx).unwrap().unwrap_or(0);
-                if value == 0 { print!("-"); } else { print!("{value}"); }
-
-                if row_idx == row.len() - 1 { break; }
-                if (row_idx + 1) % 3 == 0 { print!(" ┃ "); } else { print!(" | "); }
-            }
-
-            println!();
-            if sudoku_idx == sudoku.len() - 1 { break; }
-            if (sudoku_idx + 1) % 3 == 0 { println!("{}", "-".repeat(34)); }
-        }
-    }
-
     pub fn solve(&mut self) {
         if !self.solve_intern() { panic!("Sudoku is unsolvable"); }
     }
@@ -151,6 +136,54 @@ impl Sudoku {
             }
         }
         self.is_valid()
+    }
+
+    pub fn print(&self) {
+        let sudoku = &self.rows;
+        for sudoku_idx in 0..sudoku.len() {
+            let row = sudoku.get(sudoku_idx).unwrap();
+
+            for row_idx in 0..row.len() {
+                let value = row.get(row_idx).unwrap().unwrap_or(0);
+                if value == 0 { print!("-"); } else { print!("{value}"); }
+
+                if row_idx == row.len() - 1 { break; }
+                if (row_idx + 1) % 3 == 0 { print!(" ┃ "); } else { print!(" | "); }
+            }
+
+            println!();
+            if sudoku_idx == sudoku.len() - 1 { break; }
+            if (sudoku_idx + 1) % 3 == 0 { println!("{}", "-".repeat(34)); }
+        }
+    }
+
+    /// Consume the Sudoku and write the content in a file
+    /// The format will be the same as we expect as input
+    pub fn dump_raw(self, f_name: &str) -> io::Result<()> {
+        let file = OpenOptions::new()
+            .create(true)
+            .truncate(true)
+            .write(true)
+            .open(f_name)
+            .expect(&format!("Unable to open {f_name}"));
+
+        let mut writer = BufWriter::new(file);
+        let sudoku = self.rows;
+
+        for row in sudoku {
+            for row_idx in 0..row.len() {
+                let num = row.get(row_idx).unwrap().unwrap_or(0);
+                if num == 0 {
+                    write!(writer, "-")?;
+                } else {
+                    write!(writer, "{num}")?;
+                }
+                if row_idx != row.len() - 1 { write!(writer, " ")?; }
+            }
+            writeln!(writer)?;
+        }
+
+        Ok(())
     }
 }
 
