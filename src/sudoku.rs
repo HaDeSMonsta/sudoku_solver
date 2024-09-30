@@ -1,7 +1,8 @@
+use std::collections::HashSet;
 use crate::SudokuT;
 
 pub struct Sudoku {
-	rows: Vec<Vec<Option<u8>>>,
+	rows: SudokuT,
 }
 
 impl Sudoku {
@@ -29,6 +30,39 @@ impl Sudoku {
 	}
 
 	pub fn valid(&self) -> bool {
+		todo!()
+	}
+
+	fn validate_row(&self, row: u8) -> bool {
+		let row = self.rows.get(row as usize).unwrap();
+		let mut seen = HashSet::new();
+
+		for cell in row {
+			if let Some(num) = cell {
+				if !seen.insert(*num) { return false; } // A number exists more than once
+			}
+		}
+
+		true
+	}
+
+	fn validate_column(&self, column: u8) -> bool {
+		let mut seen = HashSet::new();
+		for row in 0usize..9usize {
+			if let Some(num) = self.rows
+			                       .get(row)
+			                       .unwrap()
+			                       .get(column as usize)
+			                       .unwrap() {
+				if !seen.insert(*num) { return false; }
+			}
+		}
+
+		true
+	}
+
+	/// Pass in the top left corner of the 3x3 box
+	fn validate_box(&self, row: u8, column: u8) -> bool {
 		todo!()
 	}
 
