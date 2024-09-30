@@ -1,7 +1,7 @@
 use crate::SudokuT;
 
 pub struct Sudoku {
-	rows: Vec<Vec<Option<u8>>>
+	rows: Vec<Vec<Option<u8>>>,
 }
 
 impl Sudoku {
@@ -15,14 +15,25 @@ impl Sudoku {
 				if value == 0 { print!("-"); } else { print!("{value}"); }
 
 				if row_idx == row.len() - 1 { break; }
-				if (row_idx + 1) % 3 == 0 { print!(" ┃ "); }
-				else { print!(" | "); }
+				if (row_idx + 1) % 3 == 0 { print!(" ┃ "); } else { print!(" | "); }
 			}
 
 			if sudoku_idx == sudoku.len() - 1 { break; }
 			println!();
 			if (sudoku_idx + 1) % 3 == 0 { println!("{}", "-".repeat(34)); }
 		}
+	}
+
+	pub fn solve(&mut self) {
+		todo!()
+	}
+
+	pub fn valid(&self) -> bool {
+		todo!()
+	}
+
+	pub fn solved(&self) -> bool {
+		todo!()
 	}
 }
 
