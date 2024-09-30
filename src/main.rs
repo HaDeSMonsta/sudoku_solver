@@ -28,7 +28,12 @@ fn main() {
     };
 
     let sudoku = sudoku.expect("Unable to read input");
-    let sudoku = Sudoku::from(sudoku);
+    let mut sudoku = Sudoku::from(sudoku);
+    println!("Read Sudoku:");
+    sudoku.print();
+    println!("\nIs valid: {}\nIs solved: {}\n", sudoku.is_valid(), sudoku.is_solved());
+    sudoku.solve();
+    println!("Solved Sudoku:");
     sudoku.print();
 }
 

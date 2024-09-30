@@ -8,7 +8,7 @@ use crate::SudokuT;
 
 pub fn read_sudoku_cmd() -> io::Result<SudokuT> {
     let mut sudoku = Vec::new();
-    println!("Please input the sudoku now line by line, allowed characters: \
+    println!("Please input the Sudoku now line by line, allowed characters: \
     [1-9-], separate by space");
     for _ in 0..9 {
         let mut input = String::new();
@@ -21,7 +21,7 @@ pub fn read_sudoku_cmd() -> io::Result<SudokuT> {
 }
 
 pub fn read_sudoku_file(path: PathBuf) -> io::Result<SudokuT> {
-    println!("Reading sudoku from file {path:?}");
+    println!("Reading Sudoku from file {path:?}");
 
     let file = OpenOptions::new()
         .read(true)

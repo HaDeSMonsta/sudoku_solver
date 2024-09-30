@@ -26,7 +26,61 @@ impl Sudoku {
     }
 
     pub fn solve(&mut self) {
-        todo!()
+        if !self.solve_intern() { panic!("Sudoku is unsolvable"); }
+    }
+
+    fn solve_intern(&mut self) -> bool {
+        if self.is_solved() { return true; }
+
+        // find first option
+        let mut x = 9;
+        let mut y = 9;
+        'outer: for row in 0..9 {
+            for column in 0..9 {
+                if self.rows
+                       .get(row)
+                       .unwrap()
+                       .get(column)
+                       .unwrap()
+                       .is_none() {
+                    x = row;
+                    y = column;
+                    break 'outer;
+                }
+            }
+        }
+
+        if x == 9 || y == 9 { return false; }
+
+        // Try every possible value
+        for num in 1..=9 {
+            let cell = self.rows
+                           .get_mut(x)
+                           .unwrap()
+                           .get_mut(y)
+                           .unwrap();
+            *cell = Some(num);
+            if !self.is_valid() {
+                // Need to shadow cell because we are calling a mut function before
+                let cell = self.rows
+                               .get_mut(x)
+                               .unwrap()
+                               .get_mut(y)
+                               .unwrap();
+                *cell = None;
+                continue;
+            }
+            if self.solve_intern() { return true; }
+            // Need to shadow cell because we are calling a mut function before
+            let cell = self.rows
+                           .get_mut(x)
+                           .unwrap()
+                           .get_mut(y)
+                           .unwrap();
+            *cell = None;
+        }
+
+        false
     }
 
     pub fn is_valid(&self) -> bool {
