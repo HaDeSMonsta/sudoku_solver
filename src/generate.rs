@@ -9,7 +9,7 @@ use crate::SudokuT;
 pub fn read_sudoku_cmd() -> io::Result<SudokuT> {
     let mut sudoku = Vec::new();
     println!("Please input the sudoku now line by line, allowed characters: \
-	[1-9-], separate by space");
+    [1-9-], separate by space");
     for _ in 0..9 {
         let mut input = String::new();
         io::stdin().read_line(&mut input)?;
