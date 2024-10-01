@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="(EZ) Run sudoku_solver" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
-    <option name="buildProfileId" value="release" />
-    <option name="command" value="run --package sudoku_solver --bin sudoku_solver -- --file sudokus/sudoku_easy.txt" />
+  <configuration default="false" name="Test sudoku_solver" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+    <option name="buildProfileId" value="test" />
+    <option name="command" value="test --workspace" />
     <option name="workingDirectory" value="file://$PROJECT_DIR$" />
     <envs />
     <option name="emulateTerminal" value="true" />
