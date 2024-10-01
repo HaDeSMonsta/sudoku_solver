@@ -185,6 +185,12 @@ impl Sudoku {
 
         Ok(())
     }
+
+    /// For test extraction only
+    #[cfg(test)]
+    pub fn into_inner(self) -> SudokuT {
+        self.rows
+    }
 }
 
 impl From<SudokuT> for Sudoku {

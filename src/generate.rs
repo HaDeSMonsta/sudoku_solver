@@ -21,6 +21,7 @@ pub fn read_sudoku_cmd() -> io::Result<SudokuT> {
 }
 
 pub fn read_sudoku_file(path: PathBuf) -> io::Result<SudokuT> {
+    #[cfg(not(test))]
     println!("Reading Sudoku from file {path:?}");
 
     let file = OpenOptions::new()
@@ -36,7 +37,7 @@ pub fn read_sudoku_file(path: PathBuf) -> io::Result<SudokuT> {
     Ok(sudoku)
 }
 
-pub fn parse_line(line: String) -> Vec<Option<u8>> {
+fn parse_line(line: String) -> Vec<Option<u8>> {
     let re = Regex::new(r"[1-9-]").unwrap();
 
     let parts = line.trim().split(" ").collect::<Vec<_>>();

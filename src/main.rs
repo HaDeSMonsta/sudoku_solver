@@ -1,5 +1,7 @@
 mod generate;
 mod sudoku;
+#[cfg(test)]
+mod tests;
 
 use clap::Parser;
 use std::io;
@@ -50,7 +52,10 @@ fn main() {
     let mut input = String::new();
     io::stdin().read_line(&mut input).unwrap();
     let input = input.trim();
-    if input.is_empty() { println!("Not saving, goodbye");return; }
+    if input.is_empty() {
+        println!("Not saving, goodbye");
+        return;
+    }
 
     let sudoku = cloned.unwrap();
     sudoku.dump_raw(input).unwrap();
