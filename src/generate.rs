@@ -30,6 +30,7 @@ pub fn read_sudoku_file(path: PathBuf) -> io::Result<SudokuT> {
 
     let mut sudoku = Vec::new();
     for line in reader.lines() {
+        if sudoku.len() == 9 { break; }
         sudoku.push(parse_line(line?));
     }
     Ok(sudoku)
@@ -62,3 +63,4 @@ pub fn parse_line(line: String) -> Vec<Option<u8>> {
 
     row
 }
+
