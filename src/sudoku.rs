@@ -18,39 +18,39 @@ impl Sudoku {
         if self.is_solved() { return true; }
 
         // find first option
-        let mut x = 9;
-        let mut y = 9;
-        'outer: for row in 0..9 {
-            for column in 0..9 {
+        let mut row = 9;
+        let mut column = 9;
+        'outer: for i in 0..9 {
+            for j in 0..9 {
                 if self.rows
-                       .get(row)
+                       .get(i)
                        .unwrap()
-                       .get(column)
+                       .get(j)
                        .unwrap()
                        .is_none() {
-                    x = row;
-                    y = column;
+                    row = i;
+                    column = j;
                     break 'outer;
                 }
             }
         }
 
-        if x == 9 || y == 9 { return false; }
+        if row == 9 || column == 9 { return false; }
 
         // Try every possible value
         for num in 1..=9 {
             let cell = self.rows
-                           .get_mut(x)
+                           .get_mut(row)
                            .unwrap()
-                           .get_mut(y)
+                           .get_mut(column)
                            .unwrap();
             *cell = Some(num);
-            if !self.is_valid() {
+            if !self.is_valid_rc(row, column) {
                 // Need to shadow cell because we are calling a mut function before
                 let cell = self.rows
-                               .get_mut(x)
+                               .get_mut(row)
                                .unwrap()
-                               .get_mut(y)
+                               .get_mut(column)
                                .unwrap();
                 *cell = None;
                 continue;
@@ -58,9 +58,9 @@ impl Sudoku {
             if self.solve_intern() { return true; }
             // Need to shadow cell because we are calling a mut function before
             let cell = self.rows
-                           .get_mut(x)
+                           .get_mut(row)
                            .unwrap()
-                           .get_mut(y)
+                           .get_mut(column)
                            .unwrap();
             *cell = None;
         }
@@ -80,6 +80,15 @@ impl Sudoku {
         }
 
         true
+    }
+
+    fn is_valid_rc(&self, row: usize, column: usize) -> bool {
+        self.is_valid_row(row) &&
+            self.is_valid_column(column) &&
+            self.is_valid_box(
+                3 * (row / 3),
+                3 * (column / 3),
+            )
     }
 
     fn is_valid_row(&self, row: usize) -> bool {
