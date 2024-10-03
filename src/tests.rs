@@ -15,7 +15,7 @@ fn easy() {
         vec![1, 9, 6, 2, 8, 4, 5, 3, 7],
     ];
 
-    let expected = map_option(expected);
+    let expected = map_to_option(expected);
     let actual = get_solved_vec("sudokus/sudoku_easy.txt");
 
     check_cells(expected, actual);
@@ -35,7 +35,7 @@ fn hard() {
         vec![1, 8, 5, 6, 3, 7, 4, 2, 9],
     ];
 
-    let expected = map_option(expected);
+    let expected = map_to_option(expected);
     let actual = get_solved_vec("sudokus/sudoku_hard.txt");
 
     check_cells(expected, actual);
@@ -55,7 +55,7 @@ fn empty() {
         vec![9, 7, 8, 5, 3, 1, 6, 4, 2],
     ];
 
-    let expected = map_option(expected);
+    let expected = map_to_option(expected);
     let actual = get_solved_vec("sudokus/sudoku_empty.txt");
 
     check_cells(expected, actual);
@@ -79,14 +79,12 @@ fn get_solved_vec(path: &'static str) -> SudokuT {
     sudoku.into_inner()
 }
 
-fn map_option(raw: Vec<Vec<u8>>) -> SudokuT {
-    let mut tmp = Vec::with_capacity(9);
-    for row in raw {
-        let mut inner_tmp = Vec::with_capacity(9);
-        for cell in row {
-            inner_tmp.push(Some(cell));
-        }
-        tmp.push(inner_tmp);
-    }
-    tmp
+fn map_to_option<T>(raw: Vec<Vec<T>>) -> Vec<Vec<Option<T>>> {
+    raw.into_iter()
+       .map(|row| {
+           row.into_iter()
+              .map(|cell| Some(cell))
+              .collect()
+       })
+       .collect()
 }
