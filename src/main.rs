@@ -6,7 +6,7 @@ mod tests;
 use clap::Parser;
 use std::io;
 use std::path::PathBuf;
-
+use std::time::Instant;
 use crate::sudoku::Sudoku;
 use generate::*;
 
@@ -19,6 +19,9 @@ struct Args {
     /// Input file with the Sudoku
     #[arg(short, long)]
     file: Option<PathBuf>,
+    /// If you want to time hoe long solving takes
+    #[arg(short, long)]
+    timing: bool,
 }
 
 fn main() {
@@ -42,8 +45,19 @@ fn main() {
     println!("\nIs valid: {}\nIs solved: {}\n", sudoku.is_valid(), sudoku.is_solved());
     #[cfg(not(debug_assertions))]
     println!();
+
+    let start = Instant::now();
+
     sudoku.solve();
-    println!("Solved Sudoku:");
+
+    let elapsed = start.elapsed();
+    let time_str = if args.timing {
+        format!(" ({} ms)", elapsed.as_millis())
+    } else {
+        String::new()
+    };
+
+    println!("Solved Sudoku:{}", time_str);
     sudoku.print();
 
     if !via_cmd { return; }
