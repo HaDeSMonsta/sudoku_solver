@@ -6,7 +6,7 @@ use std::io::{BufWriter, Write};
 
 #[derive(Clone)]
 pub struct Sudoku {
-    rows: SudokuT,
+    rows: [[Option<u8>; 9]; 9],
 }
 
 impl Sudoku {
@@ -39,29 +39,17 @@ impl Sudoku {
 
         // Try every possible value
         for num in 1..=9 {
-            let cell = self.rows
-                           .get_mut(row)
-                           .unwrap()
-                           .get_mut(column)
-                           .unwrap();
+            let cell = &mut self.rows[row][column];
             *cell = Some(num);
             if !self.is_valid_rc(row, column) {
                 // Need to shadow cell because we are calling a mut function before
-                let cell = self.rows
-                               .get_mut(row)
-                               .unwrap()
-                               .get_mut(column)
-                               .unwrap();
+                let cell = &mut self.rows[row][column];
                 *cell = None;
                 continue;
             }
             if self.solve_intern() { return true; }
             // Need to shadow cell because we are calling a mut function before
-            let cell = self.rows
-                           .get_mut(row)
-                           .unwrap()
-                           .get_mut(column)
-                           .unwrap();
+            let cell = &mut self.rows[row][column];
             *cell = None;
         }
 
@@ -107,12 +95,8 @@ impl Sudoku {
     fn is_valid_column(&self, column: usize) -> bool {
         let mut seen = HashSet::new();
         for row in 0..9 {
-            if let Some(num) = self.rows
-                                   .get(row)
-                                   .unwrap()
-                                   .get(column)
-                                   .unwrap() {
-                if !seen.insert(*num) { return false; }
+            if let Some(num) = self.rows[row][column] {
+                if !seen.insert(num) { return false; }
             }
         }
 
@@ -197,15 +181,26 @@ impl Sudoku {
 
     /// For test extraction only
     #[cfg(test)]
-    pub fn into_inner(self) -> SudokuT {
+    pub fn into_inner(self) -> [[Option<u8>; 9]; 9] {
         self.rows
     }
 }
 
 impl From<SudokuT> for Sudoku {
     fn from(sudoku: SudokuT) -> Self {
+        let mut rows = [[None; 9]; 9];
+
+        let mut row_c = 0;
+        for row in sudoku {
+            let mut col_c = 0;
+            for cell in row {
+                rows[row_c][col_c] = cell;
+                col_c += 1;
+            }
+            row_c += 1;
+        }
         Self {
-            rows: sudoku
+            rows
         }
     }
 }
