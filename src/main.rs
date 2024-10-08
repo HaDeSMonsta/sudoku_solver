@@ -42,7 +42,7 @@ fn main() {
     println!("Read Sudoku:");
     sudoku.print();
     #[cfg(debug_assertions)]
-    println!("\nIs valid: {}\nIs solved: {}\n", sudoku.is_valid(), sudoku.is_solved());
+    println!("\nIs valid: {}\nIs solved: {}\n", sudoku.is_valid_full(), sudoku.is_solved());
     #[cfg(not(debug_assertions))]
     println!();
 
