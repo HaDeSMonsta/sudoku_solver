@@ -19,9 +19,9 @@ struct Args {
     /// Input file with the Sudoku
     #[arg(short, long)]
     file: Option<PathBuf>,
-    /// If you want to time hoe long solving takes
+    /// If you want to time how long solving takes
     #[arg(short, long)]
-    timing: bool,
+    time: bool,
 }
 
 fn main() {
@@ -51,7 +51,7 @@ fn main() {
     sudoku.solve();
 
     let elapsed = start.elapsed();
-    let time_str = if args.timing {
+    let time_str = if args.time {
         format!(" ({} ms)", elapsed.as_millis())
     } else {
         String::new()
@@ -75,5 +75,4 @@ fn main() {
     sudoku.dump_raw(input).unwrap();
     println!("Saved to {input}, goodbye");
 }
-
 
